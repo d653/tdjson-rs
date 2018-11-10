@@ -50,7 +50,7 @@ impl Client {
         }
     }
 
-    pub fn receive(&mut self, timeout: Duration) -> Result<String, IntoStringError> {
+    pub fn receive(&mut self, timeout: Duration) -> Option<Result<String, IntoStringError>> {
         let timeout = timeout.as_secs() as f64;
 
         unsafe {
@@ -60,8 +60,10 @@ impl Client {
             );
 
             let answer = answer as *mut c_char;
-
-            CString::from_raw(answer).into_string()
+            if answer.is_null() {
+                return None;
+            }
+            Some(CString::from_raw(answer).into_string())
         }
     }
 }
