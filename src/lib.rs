@@ -28,7 +28,7 @@ impl Client {
         }
     }
 
-    pub fn execute(&mut self, request: &str) -> Result<String, IntoStringError> {
+    pub fn execute(&mut self, request: &str) -> String {
         let request = CString::new(request).unwrap();
         unsafe {
             let answer = td_json_client_execute(
@@ -41,7 +41,7 @@ impl Client {
             let c_str: &CStr = unsafe { CStr::from_ptr(answer) };
             let str_slice: &str = c_str.to_str().unwrap();
             let str_buf: String = str_slice.to_owned(); 
-            Some(str_buf)
+            str_buf
         }
     }
 
