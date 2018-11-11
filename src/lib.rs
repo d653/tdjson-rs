@@ -10,6 +10,7 @@ use std::os::raw::{
 use std::ffi::{
     CString,
     IntoStringError,
+    CStr
 };
 
 use std::time::Duration;
