@@ -38,7 +38,10 @@ impl Client {
 
             let answer = answer as *mut c_char;
 
-            CString::from_raw(answer).into_string()
+            let c_str: &CStr = unsafe { CStr::from_ptr(answer) };
+            let str_slice: &str = c_str.to_str().unwrap();
+            let str_buf: String = str_slice.to_owned(); 
+            Some(str_buf)
         }
     }
 
@@ -52,7 +55,7 @@ impl Client {
         }
     }
 
-    pub fn receive(&mut self, timeout: Duration) -> Option<Result<String, IntoStringError>> {
+    pub fn receive(&mut self, timeout: Duration) -> Option<String> {
         let timeout = timeout.as_secs() as f64;
 
         unsafe {
@@ -65,7 +68,11 @@ impl Client {
             if answer.is_null() {
                 return None;
             }
-            Some(CString::from_raw(answer).into_string())
+            
+            let c_str: &CStr = unsafe { CStr::from_ptr(answer) };
+            let str_slice: &str = c_str.to_str().unwrap();
+            let str_buf: String = str_slice.to_owned(); 
+            Some(str_buf)
         }
     }
 }
