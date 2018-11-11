@@ -29,6 +29,7 @@ impl Client {
     }
 
     pub fn execute(&mut self, request: &str) -> Result<String, IntoStringError> {
+        let request = CString::new(request).unwrap();
         unsafe {
             let answer = td_json_client_execute(
                 self.client_ptr,
@@ -42,6 +43,7 @@ impl Client {
     }
 
     pub fn send(&mut self, request: &str) {
+        let request = CString::new(request).unwrap();
         unsafe {
             td_json_client_send(
                 self.client_ptr,
